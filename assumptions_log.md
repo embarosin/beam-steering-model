@@ -1,0 +1,17 @@
+# Assumptions Log
+
+| # | Assumption | Value | Justification |
+|---|---|---|---|
+| 1 | Medium | Air at 20 C, 1 atm (c = 343 m/s, rho = 1.204 kg/m^3) | Standard conditions. c varies with temperature (~0.6 m/s per degree C), but the exact value does not affect the conclusions here. |
+| 2 | Lossless propagation | No absorption modeled | At 40 kHz, atmospheric absorption is about 1.2 dB/m (ISO 9613-1). Over the 30 cm propagation path that is ~0.36 dB, negligible next to the 18 dB focusing gain. At 80 kHz (second harmonic) absorption is ~4 dB/m, which would matter for nonlinear modeling. |
+| 3 | Linear acoustics | Superposition holds | Peak pressure ~4.4 Pa. Acoustic Mach number p/(rho*c^2) ~ 3e-5, well below the ~0.01 threshold for significant nonlinear effects. |
+| 4 | Point sources | No element directivity pattern | Real elements have a radiation pattern that rolls off at large angles. For elements small compared to lambda (4.3 mm pitch vs 8.6 mm wavelength), the pattern is close to omnidirectional. Reasonable for lambda/2-spaced elements. |
+| 5 | 2D simulation | Infinite and uniform in z | The NxN array focuses in z as well, but for a focal point on the z = 0 plane, the 2D cross-section captures the steering and interference physics. The main omission is the additional focusing gain from the z-dimension. |
+| 6 | Element spacing | Lambda/2 = 4.29 mm | Spatial Nyquist criterion. Wider spacing undersamples the wavefield and produces grating lobes (parasitic beams at unwanted angles, analogous to aliasing in signal processing). At exactly lambda/2, the first grating lobe is at 90 degrees (endfire), where it is suppressed. |
+| 7 | CW steady state | 55 periods simulated, recording second half | The longest propagation path is ~30 cm, requiring ~0.87 ms (35 periods). Recording begins at period 28; waves reach the focal point by period 35. That leaves about 20 periods of steady-state data, which is sufficient for p_max to converge. |
+| 8 | Grid resolution | PPW = 6 (grid spacing = lambda/6) | The pseudospectral method has spectral accuracy in space, so 6 points per wavelength is adequate. A standard finite-difference scheme would need 10-20 PPW. |
+| 9 | Absorbing boundaries | PML, 20 grid points thick | The Perfectly Matched Layer absorbs outgoing waves at the domain edges to prevent artificial reflections. 20 points is a standard choice for k-Wave at this frequency. |
+| 10 | Source amplitude | 10 Pa per element | Moderate piezoelectric drive level. Peak combined pressure at focus reaches ~4.4 Pa, well within the linear acoustic regime (small compared to atmospheric pressure ~101 kPa). |
+| 11 | Array separation | 30 cm | Gives a steering angle of about 31 degrees from horizontal to the focal point. Large enough to demonstrate beamsteering but not so large that path-length differences become extreme. |
+| 12 | CFL number | 0.3 | Well below the stability limit for k-space pseudospectral methods. Ensures numerical stability throughout the simulation. |
+| 13 | Far-field focusing | Focal point at ~1.8x the near-field distance | The array aperture is D = 34.3 mm, giving a near-field distance of D^2/lambda ≈ 13.7 cm. The focal point at 25 cm is in the far field. The delay-and-sum phase law (spherical wavefront from each element) is valid in both regions, but operating in the far field means the focal spot size is diffraction-limited and free of near-field amplitude structure. |
